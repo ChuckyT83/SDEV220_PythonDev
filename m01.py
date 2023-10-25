@@ -5,3 +5,5 @@ print("Konichiwa")
 print("Bye bye")
 print("Oh bai")
 print("Saiyanora")
+
+print("Test")
