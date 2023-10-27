@@ -1,3 +1,4 @@
 .project
-MO1\ Collaboration/
-.ipynb_checkpoints/
+MO1\ Collaboration
+.ipynb_checkpoints
+*.png
