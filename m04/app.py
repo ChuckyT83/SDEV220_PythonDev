@@ -8,7 +8,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
 db = SQLAlchemy(app)
 
 
-
+#creates Book class for SQLAlchemy entries
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     book_name = db.Column(db.String(80), unique=True, nullable=False)
@@ -17,23 +17,21 @@ class Book(db.Model):
 
     def __repr__(self):
         return f"{self.book_name} - Author: {self.author} Publisher: {self.publisher}"
-    
+
+#returns text at index page
 @app.route("/")
 def index():
     return "Welcome to the book list"
 
-#After watching the video, create a CRUD API for a Book instead of a Drink in the video example above.  The Book model should have the following parameters:
-# id
-# book_name
-# author
-# publisher
-
+#returns the book list at /books
 @app.route("/books")
 def get_books():
-    books = Book.query.all()
 
+    #queries the book database
+    books = Book.query.all()
     output = []
 
+    #iterates through the book database query and adds each entry to the output list
     for book in books:
         book_data = {"book_name": book.book_name, "author": book.author, "publisher": book.publisher}
 
@@ -41,6 +39,8 @@ def get_books():
 
     return {"books": output}
 
+
+#adds a new book when a JSON is sent with the correct parameters
 @app.route("/books", methods=["POST"])
 def add_book():
     book = Book(book_name=request.json['book_name'], author=request.json['author'], publisher=request.json['publisher'])
@@ -48,6 +48,7 @@ def add_book():
     db.session.commit()
     return {'id': book.id}
 
+#deletes a book entry when request to delete is sent to a specific book id
 @app.route("/books/<id>", methods=['DELETE'])
 def delete_book(id):
     book = Book.query.get(id)
@@ -57,6 +58,7 @@ def delete_book(id):
     db.session.commit()
     return {"message": "Book deleted."}
 
+#returns specific book based on book id
 @app.route('/books/<id>')
 def get_book(id):
     book = Book.query.get_or_404(id)
